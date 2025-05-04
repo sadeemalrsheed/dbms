@@ -8,9 +8,10 @@ body.login-body,
 body.product-body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', sans-serif;
     background-color: #dbe5ea;
 }
+
 
 .login-wrapper {
     display: flex;
