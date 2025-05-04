@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session
 import mysql.connector
 from config import DB_CONFIG
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -104,6 +105,31 @@ def remove_from_cart(product_id):
     session['cart'] = [item for item in session.get('cart', []) if isinstance(item, dict) and item.get('id') != product_id]
     session.modified = True
     return redirect('/cart')
+
+@app.route('/place_order', methods=['POST'])
+def place_order():
+    if 'user' not in session or 'cart' not in session:
+        return redirect('/')
+
+    cart_items = session['cart']
+    total = sum(item['price'] * item['quantity'] for item in cart_items)
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    try:
+        # Insert order into Orders table
+        cursor.execute(
+            "INSERT INTO Orders (User_ID, Date, Status, Total_Amount) VALUES (%s, %s, %s, %s)",
+            (session['user'], datetime.now(), 'Placed', total)
+        )
+        conn.commit()
+        session.pop('cart', None)  # Clear the cart after placing order
+        return redirect('/products')
+    except Exception as e:
+        return f"Failed to place order: {str(e)}"
+    finally:
+        conn.close()
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -38,6 +38,10 @@
         </tbody>
       </table>
       <p class="fs-4 fw-bold">Total: {{ total }} SAR</p>
+      <form action="/place_order" method="POST">
+        <button class="btn btn-success mt-3" type="submit">Place Order</button>
+      </form>
+    
 
     {% else %}
       <p>Your cart is empty.</p>
