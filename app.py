@@ -119,10 +119,9 @@ def place_order():
 
     try:
         # Insert order into Orders table
-        cursor.execute(
-            "INSERT INTO Orders (User_ID, Date, Status, Total_Amount) VALUES (%s, %s, %s, %s)",
-            (session['user'], datetime.now(), 'Placed', total)
-        )
+        cursor.execute("INSERT INTO Orders (User_ID, Order_date, Status, Total_Amount) VALUES (%s, %s, %s, %s)", 
+               (session['user'], datetime.now(), 'Placed', total))
+
         conn.commit()
         session.pop('cart', None)  # Clear the cart after placing order
         return redirect('/products')
