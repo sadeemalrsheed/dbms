@@ -1,76 +1,73 @@
 
-body.login-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f5f5f5;
+body.login-body,
+body.product-body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #dbe5ea;
 }
+
 .login-wrapper {
-  display: flex;
-  height: 100vh;
+    display: flex;
+    height: 100vh;
 }
+
 .login-left {
-  background-color: #dbe5ea;
-  flex: 1;
-  padding: 60px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+    flex: 1;
+    background-color: #dbe5ea;
+    padding: 60px;
 }
+
 .login-right {
-  background-color: white;
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    flex: 1;
+    background-color: #fff9f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.login-right.custom-bg {
-  background-color: #fff9f0;
-}
+
 .login-logo {
-  max-width: 70%;
-  height: auto;
+    max-width: 80%;
+    height: auto;
 }
+
 .login-title {
-  font-size: 28px;
-  margin-bottom: 30px;
+    font-size: 28px;
+    margin-bottom: 20px;
 }
-form {
-  display: flex;
-  flex-direction: column;
+
+form input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
-input {
-  margin-bottom: 15px;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+
+form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
 }
-button {
-  padding: 12px;
-  background-color: #1E90FF;
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+
+form button:hover {
+    background-color: #0056b3;
 }
-button:hover {
-  background-color: #156dc0;
-}
-label {
-  margin-bottom: 5px;
-  font-weight: 500;
-}
+
 .register-link {
-  margin-top: 10px;
+    margin-top: 15px;
 }
-a {
-  color: #1E90FF;
-  text-decoration: none;
+
+.product-img {
+    height: 250px;
+    object-fit: cover;
 }
-.error {
-  color: red;
-  margin-bottom: 15px;
+
+.product-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
