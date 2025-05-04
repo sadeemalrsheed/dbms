@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Products</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container">
+    <h2>Available Products</h2>
+    {% for cat, items in products.items() %}
+        <h3>{{ cat }}</h3>
+        <ul>
+            {% for name, price in items %}
+                <li>{{ name }} - {{ price }} SAR</li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+</div>
+</body>
+</html>
