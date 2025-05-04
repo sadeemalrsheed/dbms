@@ -1,21 +1,12 @@
-from flask import Flask, render_template, request, redirect, session, url_for
+from flask import Flask, render_template, request, redirect, session
 import mysql.connector
 from config import DB_CONFIG
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
-
 def get_db():
     return mysql.connector.connect(**DB_CONFIG)
-
-
-# Ensure cart exists for all users
-@app.before_request
-def setup_cart():
-    if 'cart' not in session:
-        session['cart'] = []
-
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -29,11 +20,11 @@ def login():
         conn.close()
         if user:
             session['user'] = user[0]
+            session['cart'] = []  # clear cart when user logs in
             return redirect('/products')
         else:
             return render_template('login.html', error="Invalid credentials.")
     return render_template('login.html')
-
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -55,7 +46,6 @@ def register():
             conn.close()
     return render_template('register.html')
 
-
 @app.route('/products')
 def products():
     if 'user' not in session:
@@ -64,64 +54,57 @@ def products():
     conn = get_db()
     cursor = conn.cursor()
 
-    # Category filter
     category = request.args.get('category')
     if category:
-        cursor.execute("SELECT Product_ID, Name, Price, Category FROM Product WHERE Category=%s LIMIT 3", (category,))
+        cursor.execute("SELECT Product_ID, Name, Price, Category FROM Product WHERE Category=%s", (category,))
     else:
         cursor.execute("SELECT Product_ID, Name, Price, Category FROM Product")
 
     product_data = cursor.fetchall()
     conn.close()
-
     return render_template('products.html', products=product_data, cart=session.get('cart', []))
-
 
 @app.route('/add_to_cart/<int:product_id>')
 def add_to_cart(product_id):
-    cart = session.get('cart', [])
-    found = False
+    if 'cart' not in session:
+        session['cart'] = []
 
-    for item in cart:
-        if isinstance(item, dict) and item.get('id') == product_id:
-            item['quantity'] += 1
-            found = True
-            break
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT Product_ID, Name, Price FROM Product WHERE Product_ID = %s", (product_id,))
+    product = cursor.fetchone()
+    conn.close()
 
-    if not found:
-        conn = get_db()
-        cursor = conn.cursor()
-        cursor.execute("SELECT Product_ID, Name, Price FROM Product WHERE Product_ID=%s", (product_id,))
-        prod = cursor.fetchone()
-        conn.close()
-        if prod:
-            cart.append({
-                'id': prod[0],
-                'name': prod[1],
-                'price': float(prod[2]),
+    if product:
+        # Check if product is already in cart
+        for item in session['cart']:
+            if item['id'] == product[0]:
+                item['quantity'] += 1
+                break
+        else:
+            session['cart'].append({
+                'id': product[0],
+                'name': product[1],
+                'price': float(product[2]),
                 'quantity': 1
             })
+        session.modified = True
 
-    session['cart'] = cart
-    session.modified = True
     return redirect('/products')
-
-
-
-@app.route('/remove_from_cart/<int:product_id>')
-def remove_from_cart(product_id):
-    session['cart'] = [item for item in session['cart'] if item['id'] != product_id]
-    session.modified = True
-    return redirect('/cart')
-
 
 @app.route('/cart')
 def cart():
-    total = sum(item['price'] * item['quantity'] for item in session.get('cart', []) if isinstance(item, dict))
-    return render_template('cart.html', cart=session['cart'], total_price=round(total, 2))
+    cart_items = session.get('cart', [])
+    total = sum(item['price'] * item['quantity'] for item in cart_items)
+    return render_template('cart.html', cart=cart_items, total=total)
 
-
+@app.route('/remove_from_cart/<int:product_id>')
+def remove_from_cart(product_id):
+    session['cart'] = [item for item in session.get('cart', []) if isinstance(item, dict) and item.get('id') != product_id]
+    session.modified = True
+    return redirect('/cart')
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
