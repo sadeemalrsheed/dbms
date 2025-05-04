@@ -37,7 +37,7 @@
     {% for pid, name, price, category in products %}
       <div class="col-md-4 mb-4">
         <div class="card h-100 shadow-sm">
-          <img src="/static/images/{{ name|lower|replace(' ', '_') }}.jpg" class="card-img-top" style="height: 250px; object-fit: cover;">
+          <img src="/static/images/{{ name|lower|replace(' ', '_')|replace(':', '') }}.jpg" class="card-img-top">
           <div class="card-body text-center">
             <h5 class="card-title">{{ name }}</h5>
             <p class="card-text">{{ price }} SAR</p>
