@@ -49,15 +49,24 @@ def register():
 def products():
     if 'user' not in session:
         return redirect('/')
+
     conn = get_db()
     cursor = conn.cursor()
-    categories = ['Books', 'Electronics', 'Clothing']
-    product_data = {}
-    for cat in categories:
-        cursor.execute("SELECT Name, Price FROM Product WHERE Category=%s LIMIT 3", (cat,))
-        product_data[cat] = cursor.fetchall()
+
+    # Check for category filter
+    category = request.args.get('category')
+    if category:
+        cursor.execute("SELECT Product_ID, Name, Price, Category FROM Product WHERE Category=%s LIMIT 3", (category,))
+    else:
+        cursor.execute("SELECT Product_ID, Name, Price, Category FROM Product")
+
+    product_data = cursor.fetchall()
     conn.close()
-    return render_template('products.html', products=product_data)
+
+    # Initialize cart session if not set
+    cart = session.get('cart', [])
+
+    return render_template('products.html', products=product_data, cart=cart)
 
 if __name__ == '__main__':
     app.run(debug=True)
