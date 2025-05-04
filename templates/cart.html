@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Your Cart - EasyMart</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="login-body">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/products">E-Shop</a>
+      <a href="/products" class="btn btn-outline-secondary">Continue Shopping</a>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <h2 class="mb-4">Your Cart</h2>
+    {% if cart %}
+      <table class="table table-bordered bg-white rounded shadow-sm">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Price (SAR)</th>
+            <th>Quantity</th>
+            <th>Remove</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in cart %}
+            <tr>
+              <td>{{ item.name }}</td>
+              <td>{{ item.price }}</td>
+              <td>{{ item.quantity }}</td>
+              <td><a href="/remove_from_cart/{{ item.id }}" class="btn btn-danger btn-sm">Delete</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <h4>Total: {{ total_price }} SAR</h4>
+    {% else %}
+      <p>Your cart is empty.</p>
+    {% endif %}
+  </div>
+</body>
+</html>
