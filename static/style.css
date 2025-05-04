@@ -24,6 +24,9 @@ body.login-body {
   justify-content: center;
   align-items: center;
 }
+.login-right.custom-bg {
+  background-color: #fff9f0;
+}
 .login-logo {
   max-width: 70%;
   height: auto;
