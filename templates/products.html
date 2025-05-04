@@ -11,17 +11,27 @@
   <div class="container-fluid">
     <a class="navbar-brand" href="#">EasyMart</a>
 
-    <div class="dropdown me-3">
-      <button class="btn btn-primary dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-        Categories
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
-        <li><a class="dropdown-item" href="/products">Show All</a></li>
-        <li><a class="dropdown-item" href="/products?category=Books">Books</a></li>
-        <li><a class="dropdown-item" href="/products?category=Electronics">Electronics</a></li>
-        <li><a class="dropdown-item" href="/products?category=Clothing">Clothing</a></li>
-      </ul>
+    <div class="d-flex align-items-center gap-2">
+      <a href="/cart" class="btn btn-outline-success position-relative">
+        🛒 Cart
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+          {{ cart|length }}
+        </span>
+      </a>
+    
+      <div class="dropdown">
+        <button class="btn btn-lightblue dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          Categories
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+          <li><a class="dropdown-item" href="/products">Show All</a></li>
+          <li><a class="dropdown-item" href="/products?category=Books">Books</a></li>
+          <li><a class="dropdown-item" href="/products?category=Electronics">Electronics</a></li>
+          <li><a class="dropdown-item" href="/products?category=Clothing">Clothing</a></li>
+        </ul>
+      </div>
     </div>
+    
 
     <a href="/cart" class="btn btn-outline-success position-relative">
       🛒 Cart
