@@ -94,9 +94,10 @@ def add_to_cart(product_id):
 
 @app.route('/cart')
 def cart():
-    cart_items = session.get('cart', [])
+    cart_items = [item for item in session.get('cart', []) if isinstance(item, dict)]
     total = sum(item['price'] * item['quantity'] for item in cart_items)
     return render_template('cart.html', cart=cart_items, total=total)
+
 
 @app.route('/remove_from_cart/<int:product_id>')
 def remove_from_cart(product_id):
