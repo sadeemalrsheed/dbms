@@ -1,4 +1,4 @@
-<!-- Updated Products Page with Features -->
+<!-- Updated Products Page with Features and Show All -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,10 +12,11 @@
     <a class="navbar-brand fw-bold" href="#">E-Shop</a>
     <div class="d-flex">
       <div class="dropdown me-2">
-        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
           Categories
         </button>
         <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="/products">Show All</a></li>
           <li><a class="dropdown-item" href="/products?category=Books">Books</a></li>
           <li><a class="dropdown-item" href="/products?category=Electronics">Electronics</a></li>
           <li><a class="dropdown-item" href="/products?category=Clothing">Clothing</a></li>
@@ -40,7 +41,7 @@
           <div class="card-body">
             <h5 class="card-title">{{ name }}</h5>
             <p class="card-text">{{ price }} SAR</p>
-            <a href="/add_to_cart/{{ pid }}" class="btn btn-primary w-100" style="background-color:#6ba6ce; border:none;">Add to Cart</a>
+            <a href="/add_to_cart/{{ pid }}" class="btn w-100" style="background-color:#6ba6ce; border:none; color:white;">Add to Cart</a>
           </div>
         </div>
       </div>
