@@ -117,8 +117,9 @@ def remove_from_cart(product_id):
 
 @app.route('/cart')
 def cart():
-    total = sum(item['price'] * item['quantity'] for item in session['cart'])
+    total = sum(item['price'] * item['quantity'] for item in session.get('cart', []) if isinstance(item, dict))
     return render_template('cart.html', cart=session['cart'], total_price=round(total, 2))
+
 
 
 if __name__ == '__main__':
