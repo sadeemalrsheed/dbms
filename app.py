@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, url_for
+from flask import Flask, render_template, request, redirect, session
 import mysql.connector
 from config import DB_CONFIG
 
@@ -20,7 +20,6 @@ def login():
         conn.close()
         if user:
             session['user'] = user[0]
-            session['cart'] = []
             return redirect('/products')
         else:
             return render_template('login.html', error="Invalid credentials.")
@@ -46,32 +45,19 @@ def register():
             conn.close()
     return render_template('register.html')
 
-@app.route('/products', methods=['GET', 'POST'])
+@app.route('/products')
 def products():
     if 'user' not in session:
         return redirect('/')
     conn = get_db()
     cursor = conn.cursor()
-    selected_category = request.args.get('category')
-    if selected_category:
-        cursor.execute("SELECT Product_ID, Name, Price, Category FROM Product WHERE Category=%s", (selected_category,))
-    else:
-        cursor.execute("SELECT Product_ID, Name, Price, Category FROM Product LIMIT 9")
-    products = cursor.fetchall()
+    categories = ['Books', 'Electronics', 'Clothing']
+    product_data = {}
+    for cat in categories:
+        cursor.execute("SELECT Name, Price FROM Product WHERE Category=%s LIMIT 3", (cat,))
+        product_data[cat] = cursor.fetchall()
     conn.close()
-    return render_template('products.html', products=products, cart=session.get('cart', []))
+    return render_template('products.html', products=product_data)
 
-@app.route('/add_to_cart/<int:product_id>')
-def add_to_cart(product_id):
-    if 'cart' not in session:
-        session['cart'] = []
-    session['cart'].append(product_id)
-    session.modified = True
-    return redirect('/products')
-
-@app.route('/cart')
-def cart():
-    return f"Items in Cart: {session.get('cart', [])}"
-    
 if __name__ == '__main__':
     app.run(debug=True)
