@@ -79,12 +79,15 @@ def products():
 
 @app.route('/add_to_cart/<int:product_id>')
 def add_to_cart(product_id):
+    cart = session.get('cart', [])
     found = False
-    for item in session['cart']:
-        if item['id'] == product_id:
+
+    for item in cart:
+        if isinstance(item, dict) and item.get('id') == product_id:
             item['quantity'] += 1
             found = True
             break
+
     if not found:
         conn = get_db()
         cursor = conn.cursor()
@@ -92,14 +95,17 @@ def add_to_cart(product_id):
         prod = cursor.fetchone()
         conn.close()
         if prod:
-            session['cart'].append({
+            cart.append({
                 'id': prod[0],
                 'name': prod[1],
                 'price': float(prod[2]),
                 'quantity': 1
             })
+
+    session['cart'] = cart
     session.modified = True
     return redirect('/products')
+
 
 
 @app.route('/remove_from_cart/<int:product_id>')
