@@ -37,6 +37,7 @@ def register():
         name = request.form['name']
         address = request.form['address']
         email = request.form['email']
+        phone = request.form['phone']
         password = request.form['password']
         conn = get_db()
         cursor = conn.cursor()
@@ -47,6 +48,7 @@ def register():
             """, (name, address, email, password))
             user_id = cursor.lastrowid
             cursor.execute("INSERT INTO Customer (User_ID) VALUES (%s)", (user_id,))
+            cursor.execute("INSERT INTO User_PhoneNum (User_ID, UPhone_num) VALUES (%s, %s)", (user_id, phone))
             conn.commit()
             return redirect('/')
         except Exception as e:
