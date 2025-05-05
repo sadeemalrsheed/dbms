@@ -39,6 +39,9 @@ def register():
         try:
             cursor.execute("INSERT INTO User (User_ID, Name, Address, Email, User_type) VALUES (%s, %s, %s, %s, 'Customer')",
                            (uid, name, address, email))
+            # Insert into Customer table with default 0 loyalty points
+            cursor.execute("INSERT INTO Customer (User_ID) VALUES (%s)", (uid,))
+
             conn.commit()
             return redirect('/')
         except:
@@ -121,6 +124,10 @@ def place_order():
         # Insert order into Orders table
         cursor.execute("INSERT INTO Orders (User_ID, Order_date, Status, Total_Amount) VALUES (%s, %s, %s, %s)", 
                (session['user'], datetime.now(), 'Placed', total))
+        
+        # Add 10 loyalty points to the user
+        cursor.execute("UPDATE Customer SET Loyalty_points = Loyalty_points + 10 WHERE User_ID = %s", (session['user'],))
+
 
         conn.commit()
         session.pop('cart', None)  # Clear the cart after placing order
