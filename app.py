@@ -136,7 +136,6 @@ def place_order():
             VALUES (%s, %s, %s, %s)
         """, (session['user'], datetime.now(), 'Placed', total))
 
-        cursor.execute("UPDATE Customer SET Loyalty_points = Loyalty_points + 10 WHERE User_ID = %s", (session['user'],))
         conn.commit()
         session.pop('cart', None)
         return redirect('/products')
